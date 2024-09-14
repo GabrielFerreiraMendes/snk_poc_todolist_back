@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.snk.todolist.domain.dto.UserDTO;
 import com.snk.todolist.domain.model.User;
+import com.snk.todolist.domain.service.TaskService;
 import com.snk.todolist.domain.service.UserService;
 
 @RestController
@@ -26,6 +27,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TaskService taskService;
 
     @GetMapping
     public ResponseEntity<List<User>> getUsers(){
@@ -53,6 +56,13 @@ public class UserController {
 
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<User> deletarById(@PathVariable Long id) {
+        
+        var tasks = this.taskService.findByUserId(id);
+        
+        if (!tasks.isEmpty()) {
+            return new ResponseEntity<User>(HttpStatus.CONFLICT);
+        }
+
         this.userService.deleteById(id);
 
         return new ResponseEntity<User>(HttpStatus.OK);

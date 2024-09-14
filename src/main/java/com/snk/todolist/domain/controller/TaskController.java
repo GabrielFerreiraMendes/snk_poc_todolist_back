@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.snk.todolist.domain.dto.TaskDTO;
-import com.snk.todolist.domain.dto.UserDTO;
 import com.snk.todolist.domain.model.Task;
-import com.snk.todolist.domain.model.User;
 import com.snk.todolist.domain.service.TaskService;
 
 import java.util.List;
