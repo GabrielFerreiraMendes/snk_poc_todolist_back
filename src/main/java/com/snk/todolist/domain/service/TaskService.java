@@ -19,6 +19,10 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
+    public Task findTaskById(Long taskId) {
+        return taskRepository.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
+    }
+
     public Task addTask(TaskDTO dto) {
         return this.taskRepository.save(new Task(dto));
     }
@@ -33,8 +37,11 @@ public class TaskService {
         return this.taskRepository.save(task);
     }
 
-    public List<Task> findByUserId(Long userId){
+    public List<Task> findByUserId(Long userId) {
         return this.taskRepository.findByUserId(userId);
-    }    
-    
+    }
+
+    public void deleteById(Long taskId) {
+        this.taskRepository.deleteById(taskId);
+    }
 }
