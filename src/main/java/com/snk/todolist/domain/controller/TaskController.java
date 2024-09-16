@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+//Adicionada anotação para evitar o erro de cors, backend na porta 8081 e front na 4200
 public class TaskController {
 
     @Autowired
@@ -35,9 +36,7 @@ public class TaskController {
     public ResponseEntity<List<Task>> getAllTasks() {
         var tasks = this.taskService.getTasks();
 
-        System.out.println(tasks);
-
-
+        //Altera o status do response de acordo com a existência de tarefas cadastras
         if (tasks.size() > 0) {
             return new ResponseEntity<>(tasks, HttpStatus.OK);
         }
@@ -60,7 +59,9 @@ public class TaskController {
     @PostMapping("/add")
     public ResponseEntity<Task> addTask(@RequestBody TaskDTO dto) {
 
+        //Valida se o usuário existe antes de realizar a inserção de uma nova tarefa
         if (this.userService.getById(dto.userId()) == null) {
+            //Se o usuário informado não existir, não será possível adicionar a tarefa
             return new ResponseEntity<Task>(HttpStatus.CONFLICT); 
         }
 

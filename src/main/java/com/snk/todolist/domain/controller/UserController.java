@@ -23,6 +23,7 @@ import com.snk.todolist.domain.service.UserService;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+//Adicionada anotação para evitar o erro de cors, backend na porta 8081 e front na 4200
 public class UserController {
     @Autowired
     private UserService userService;
@@ -31,11 +32,12 @@ public class UserController {
     private TaskService taskService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers(){
-        
+    public ResponseEntity<List<User>> getUsers() {
+
         var users = this.userService.getUsers();
 
-                if (users.size() > 0) {
+        //Altera o status do response de acordo com a existência de tarefas cadastras
+        if (users.size() > 0) {
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
 
@@ -52,14 +54,16 @@ public class UserController {
     public ResponseEntity<User> addUser(@RequestBody UserDTO dto) throws IOException {
         var user = this.userService.addUser(dto);
         return new ResponseEntity<User>(user, HttpStatus.CREATED);
-    }    
+    }
 
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<User> deletarById(@PathVariable Long id) {
-        
+
         var tasks = this.taskService.findByUserId(id);
-        
+
+        //Valida se o usuário possui tarefas cadastradas em seu nome antes da exclusão
         if (!tasks.isEmpty()) {
+            //Se tiver tarefas cadsatrasdas ele não poderá ser deletado
             return new ResponseEntity<User>(HttpStatus.CONFLICT);
         }
 
